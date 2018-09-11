@@ -220,14 +220,14 @@ rand_token(Chal, Key) ->
 
 make_token_(P, Chal, Key) ->
     <<_:16/binary,Token:4/binary>> =
-	crypto:sha(<<Key/binary, Chal:32/little, P/binary>>),
+	crypto:hash(sha, <<Key/binary, Chal:32/little, P/binary>>),
     ?debug("~p: make_token(~p, ~p, ~p) -> ~p~n", 
 	   [?MODULE, P, Chal, Key, Token]),
     Token.
 
 check_token_(Tok, P, Chal, Key) ->
     ?debug("check_token(~p, ~p, ~p, ~p)~n", [Tok, P, Chal, Key]),
-    case crypto:sha(<<Key/binary, Chal:32/little, P/binary>>) of
+    case crypto:hash(sha, <<Key/binary, Chal:32/little, P/binary>>) of
 	<<_:16/binary, Tok:4/binary>> ->
 	    ?debug("check_token: true (~p)~n", [Tok]),
 	    true;
